@@ -24,11 +24,21 @@ int main () {
 
     do {
 
-        pin_t pin1, session, logged ={};
-        operation_t operation;
-        do_t withdraw, transact, exchange, cashin = {};
-        text_t accountHolder, receiver;
+        pin_t pin1 = {};
+        pin_t session = {};
+        pin_t logged = {};
+
+        do_t withdraw = {};
+        do_t transact = {};
+        do_t exchange = {};
+        do_t cashin = {};
+
+        text_t accountHolder;
+        text_t receiver;
         text_t currency = "Pesos";
+
+        operation_t operation = {};
+        
         const dollar_t dollar = 0.0164;
 
         std::cout << "Please enter your name: \n";
@@ -56,12 +66,9 @@ int main () {
                 continue;
             }
         
-       
-
         while(true) {
 
-        
-        
+    
         std::cout << "What operation do you want to do?\n";
         std::cout << "1. Withdraw\n";
         std::cout << "2. Transact\n";
