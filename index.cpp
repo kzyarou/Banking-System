@@ -7,26 +7,38 @@ typedef double do_t;
 using text_t = std::string;
 using dollar_t = double;
 
+
+// Account info are found here
 namespace firstAccount {
     std::string accountName = "Zachary";
     int pin = 5132;
+    balance_t balance = 500;
+    balance_t secondBalance = {};
+
 }
 
 namespace secondAccount {
     std::string accountName = "Therese";
     int pin = 1234;
     balance_t balance = 900;
+    balance_t secondBalance = {};
 }
 
 int main () {
 
+
+    // Using a namespace to refer to a certain account
     using namespace secondAccount;
 
+    pin_t logged = {};
+
+
+    // Start of the first loop
     do {
 
+        // Initialized variables
         pin_t pin1 = {};
         pin_t session = {};
-        pin_t logged = {};
 
         do_t withdraw = {};
         do_t transact = {};
@@ -36,11 +48,14 @@ int main () {
         text_t accountHolder;
         text_t receiver;
         text_t currency = "Pesos";
-
+        text_t secondCurrency;
+ 
         operation_t operation = {};
         
         const dollar_t dollar = 0.0164;
 
+
+        // Prompt
         std::cout << "Please enter your name: \n";
         std::cin >> accountHolder;
         std::cout << "\n";
@@ -49,6 +64,7 @@ int main () {
         std::cin >> pin1;
         std::cout << "\n";
 
+            // User authentication
             if (accountHolder == accountName && pin1 == pin) {
             std::cout << "Welcome to your dashboard, " << accountName << "\n";
             ++logged;
@@ -66,9 +82,10 @@ int main () {
                 continue;
             }
         
+        // Start of second loop
         while(true) {
 
-    
+        // Prompt
         std::cout << "What operation do you want to do?\n";
         std::cout << "1. Withdraw\n";
         std::cout << "2. Transact\n";
@@ -78,9 +95,8 @@ int main () {
         std::cout << "6. Check Balance\n";
         std::cout << "7. Session Info\n";
         std::cin >> operation;
-
-
-        
+            
+        // L82-L90 Main function
         switch (operation) {
 
             case 1:
@@ -104,6 +120,7 @@ int main () {
                 std::cout << "Whom do you wanna send it to\n";
                 std::cin >> receiver;
 
+                    // Checks if balance is enough & if receiver exists
                     if (balance >= transact && receiver == firstAccount::accountName && receiver != secondAccount::accountName) {
                         balance -= transact;
                         std::cout << "Transaction successful!\n";
@@ -117,15 +134,23 @@ int main () {
                 break;
             case 3:
                 std::cout << "How much do you want to Exchange?\n";
-                std::cout << "(Exchanges all money to USD)\n";
                 std::cin >> exchange;
 
-                balance = balance * dollar;
+                // Verifies if balance is enough for exchange
+                if (exchange <= balance) {
+                    // Does balance operation and sets secondBalance
+                    balance = balance - exchange;
+                    secondBalance = exchange * dollar;
 
-                std::cout << "Successfully exchanged " << exchange << " to " << balance << " Dollars!\n";
-                
-                currency = "Dollar";
+                    // Simple currency conversion
+                    std::cout << "Successfully exchanged " << exchange << " to " << secondBalance << " Dollars!\n";
+                    std::cout << "Your remaining balance is " << balance << " Pesos.\n";
+                ++logged;
 
+                    secondCurrency = "Dollar";
+                } else {
+                    std::cout << "You do not have enough balance.\n";
+                }
                 break;
             case 4:
                 std::cout << "How much do you want to Cash In?\n";
@@ -139,12 +164,15 @@ int main () {
                 std::cout << "Session ended.\n";
                 break;
             case 6:
-                if (currency == "Pesos") {
+                if (secondCurrency == "Dollar" && currency == "Pesos") {
+                    std::cout << "You have " << balance << " Pesos, and " << secondBalance << " Dollars.\n";
+                } 
+                else if (currency == "Dollar") {
                     std::cout << "You have " << balance << " Pesos\n";
-                } else if (currency == "Dollar") {
+                } 
+                else if (currency == "Dollar") {
                     std::cout << "You have " << balance << " Dollars\n";
-                }   
-                
+                }
                 break;
             case 7:
                 std::cout << "You have " << session << " Active Session.\n";
@@ -154,6 +182,8 @@ int main () {
                 std::cout << "Invalid operation, please try again.\n";
                 break;
         }
+
+        // Exits the operation and goes back to Auth
         if (operation == 5) {
         break;
         }
@@ -162,4 +192,6 @@ int main () {
 
     
     }while(true);
+
+
 }
