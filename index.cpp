@@ -30,6 +30,7 @@ int main () {
     // Using a namespace to refer to a certain account
     using namespace secondAccount;
 
+    // Log counter
     pin_t logged = {};
 
 
@@ -117,20 +118,34 @@ int main () {
                 std::cout << "How much do you want to Send?\n";
                 std::cin >> transact;
 
+                // Transaction validation
+                if (transact <= 0) {
+                        std::cout << "Invalid input!\n";
+                        break;
+                }
+
                 std::cout << "Whom do you wanna send it to\n";
                 std::cin >> receiver;
 
-                    // Checks if balance is enough & if receiver exists
-                    if (balance >= transact && receiver == firstAccount::accountName && receiver != secondAccount::accountName) {
-                        balance -= transact;
-                        std::cout << "Transaction successful!\n";
-                        std::cout << "Your remaining balance is: " << balance << "\n";
-                    } else if (transact < balance) {
-                        std::cout << "Insufficient balance.\n";
-                    } else if (receiver == firstAccount::accountName && receiver != secondAccount::accountName) {
-                        std::cout << "User does not exist.\n";
-                    }
+                // Receiver validation
+                if (receiver == firstAccount::accountName) {
+                    std::cout << "Sending...\n";
+                }
+                else if (receiver == accountName) {
+                    std::cout << "You cannot send money to yourself.\n";
+                    break;
+                }
 
+                // Checks if balance is enough & if receiver exists
+                if (balance >= transact && receiver == firstAccount::accountName) {
+                    balance -= transact;
+                    std::cout << "Transaction successful!\n";
+                    std::cout << transact << " sent to " << receiver << '\n';
+                    std::cout << "Your remaining balance is: " << balance << "\n";
+                } else if (balance < transact) {
+                    std::cout << "Insufficient balance.\n";
+                    break;
+                }  
                 break;
             case 3:
                 std::cout << "How much do you want to Exchange?\n";
@@ -138,14 +153,14 @@ int main () {
 
                 // Verifies if balance is enough for exchange
                 if (exchange <= balance) {
+
                     // Does balance operation and sets secondBalance
-                    balance = balance - exchange;
+                    balance -= exchange;
                     secondBalance = exchange * dollar;
 
-                    // Simple currency conversion
+                    // Success message
                     std::cout << "Successfully exchanged " << exchange << " to " << secondBalance << " Dollars!\n";
                     std::cout << "Your remaining balance is " << balance << " Pesos.\n";
-                ++logged;
 
                     secondCurrency = "Dollar";
                 } else {
@@ -167,7 +182,7 @@ int main () {
                 if (secondCurrency == "Dollar" && currency == "Pesos") {
                     std::cout << "You have " << balance << " Pesos, and " << secondBalance << " Dollars.\n";
                 } 
-                else if (currency == "Dollar") {
+                else if (currency == "Pesos") {
                     std::cout << "You have " << balance << " Pesos\n";
                 } 
                 else if (currency == "Dollar") {
