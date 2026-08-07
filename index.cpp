@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <iostream>
 
 typedef int pin_t;
@@ -24,14 +25,54 @@ namespace secondAccount {
     balance_t secondBalance = {};
 }
 
+namespace newAccount {
+    std::string accountName;
+    int pin;
+    balance_t balance = {};
+    balance_t secondBalance = {};
+}
+
 int main () {
 
-
     // Using a namespace to refer to a certain account
-    using namespace secondAccount;
+    using namespace newAccount;
+
+    // Variables
+    char hasAccount;
+    char createAccount;
 
     // Log counter
     pin_t logged = {};
+
+    // Account Creation
+    do {
+        std::cout << "Do you have an exisiting account?\n(Y/N)\n";
+        std::cin >> hasAccount;
+
+        if (hasAccount == 'N' || hasAccount == 'n') {
+            std::cout << "Do you want to create an account?\n";
+            std::cin >> createAccount;
+
+            if (createAccount == 'Y' || createAccount == 'y') {
+                std::cout << "Please enter your account name: ";
+                std::cin >> accountName;
+
+                std::cout << "\nEnter your 4 digit PIN: ";
+                std::cin >> pin;
+
+                std::cout << "\nEnter your balance: ";
+                std::cin >> balance;
+
+                std::cout << "Account successfully created, please log in.\n";
+            } else {
+                std::cout << "Session ended.";
+                break;
+            }
+        } else {
+            hasAccount = true;
+            continue;
+        }
+    } while (hasAccount == false);
 
 
     // Start of the first loop
@@ -60,28 +101,30 @@ int main () {
         std::cout << "Please enter your name: \n";
         std::cin >> accountHolder;
         std::cout << '\n';
+        if (accountHolder != accountName) {
+            std::cout << "Invalid Account Holder!\n";
+            continue;
+        }
 
         std::cout << "Welcome, " << accountHolder << "! \nPlease enter your PIN: \n";
         std::cin >> pin1;
         std::cout << '\n';
+        if (pin1 != pin){
+            std::cout << "Invalid PIN!\n";
+            continue;
+        }
 
-            // User authentication
-            if (accountHolder == accountName && pin1 == pin) {
+        // User authentication
+        if (accountHolder == accountName && pin1 == pin) {
             std::cout << "Welcome to your dashboard, " << accountName << '\n';
             ++logged;
-            }
-            else if (accountHolder != accountName && pin1 != pin) {
-                std::cout << "Invalid account holder and PIN!\n";
-                continue;
-            }
-            else if (accountHolder != accountName) {
-                std::cout << "Invalid Account Holder!\n";
-                continue;
-            }
-            else {
-                std::cout << "Invalid PIN!\n";
-                continue;
-            }
+        }
+        else {
+            std::cout << "Invalid account holder and PIN!\n";
+            continue;
+        }
+            
+            
         
         // Start of second loop
         while(true) {
