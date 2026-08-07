@@ -27,7 +27,7 @@ namespace secondAccount {
 
 namespace newAccount {
     std::string accountName;
-    int pin;
+    int pin = {};
     balance_t balance = {};
     balance_t secondBalance = {};
 }
@@ -41,6 +41,9 @@ int main () {
     char hasAccount;
     char createAccount;
 
+    // Password Randomizer
+    srand(time(NULL));
+
     // Log counter
     pin_t logged = {};
 
@@ -52,26 +55,41 @@ int main () {
         if (hasAccount == 'N' || hasAccount == 'n') {
             std::cout << "Do you want to create an account?\n";
             std::cin >> createAccount;
-
-            if (createAccount == 'Y' || createAccount == 'y') {
-                std::cout << "Please enter your account name: ";
-                std::cin >> accountName;
-
-                std::cout << "\nEnter your 4 digit PIN: ";
-                std::cin >> pin;
-
-                std::cout << "\nEnter your balance: ";
-                std::cin >> balance;
-
-                std::cout << "Account successfully created, please log in.\n";
-            } else {
-                std::cout << "Session ended.";
-                break;
-            }
         } else {
             hasAccount = true;
             continue;
         }
+        if (createAccount == 'Y' || createAccount == 'y') {
+            std::cout << "Please enter your account name: ";
+            std::cin >> accountName;
+
+            std::cout << "\nEnter your 4 digit PIN (Press 1 to create a generated PIN): ";
+            std::cin >> pin;
+
+            // Random function
+            if(pin == 1) {
+            pin = 
+            ((rand() % 9) + 1) * 1000
+            + ((rand() % 9) + 1) * 100
+            + ((rand() % 9) + 1) * 10
+            + ((rand() % 9) + 1); 
+                        
+            } else {
+            std::cout << "Your PIN must be 4 numbers!\n";
+            break;
+            }
+
+            std::cout << "This is your system generated 4 digit PIN: " << pin;
+
+            std::cout << "\nEnter your balance: ";
+            std::cin >> balance;
+
+            std::cout << "Account successfully created, please log in.\n";
+        } else {
+            std::cout << "Session ended.";
+            break;
+        }
+        
     } while (hasAccount == false);
 
 
