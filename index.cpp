@@ -59,15 +59,15 @@ int main () {
         // Prompt
         std::cout << "Please enter your name: \n";
         std::cin >> accountHolder;
-        std::cout << "\n";
+        std::cout << '\n';
 
         std::cout << "Welcome, " << accountHolder << "! \nPlease enter your PIN: \n";
         std::cin >> pin1;
-        std::cout << "\n";
+        std::cout << '\n';
 
             // User authentication
             if (accountHolder == accountName && pin1 == pin) {
-            std::cout << "Welcome to your dashboard, " << accountName << "\n";
+            std::cout << "Welcome to your dashboard, " << accountName << '\n';
             ++logged;
             }
             else if (accountHolder != accountName && pin1 != pin) {
@@ -105,7 +105,7 @@ int main () {
                 std::cin >> withdraw;
 
                     if (balance >= withdraw) {
-                        balance = balance - withdraw;
+                        balance -= withdraw;
                         std::cout << "Successfully Withdrawed " << withdraw << " Pesos!\n";
                         std::cout << "Your remaining balance is " << balance << " Pesos.\n";
                         std::cout << "Going back...\n";
@@ -141,7 +141,7 @@ int main () {
                     balance -= transact;
                     std::cout << "Transaction successful!\n";
                     std::cout << transact << " sent to " << receiver << '\n';
-                    std::cout << "Your remaining balance is: " << balance << "\n";
+                    std::cout << "Your remaining balance is: " << balance << '\n';
                 } else if (balance < transact) {
                     std::cout << "Insufficient balance.\n";
                     break;
@@ -171,7 +171,7 @@ int main () {
                 std::cout << "How much do you want to Cash In?\n";
                 std::cin >> cashin;
 
-                balance = balance + cashin;
+                balance += cashin;
 
                 std::cout << "Successfully cashed " << cashin << " to your account.";
                 break;
@@ -190,7 +190,7 @@ int main () {
                 }
                 break;
             case 7:
-                std::cout << "You have " << session << " Active Session.\n";
+                std::cout << "Hello, " << accountName << '\n';
                 std::cout << "You have logged in " << logged << " times.\n";
                 break;
             default:
