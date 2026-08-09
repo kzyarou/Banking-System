@@ -1,7 +1,9 @@
+#include <ios>
 #include <iostream> 
 #include <string>
 #include <cstdlib>
 #include <ctime>
+#include <limits>
 
 
 typedef int pin_t;
@@ -83,22 +85,22 @@ do {
                 // Do nothing
             } else {
                 std::cout << "Your PIN should be 4 digits!\n";
+                continue;
             }
-            
+            std::cout << "\nEnter your balance: ";
+            std::cin >> balance;
+
+            std::cout << "Account successfully created, please log in.\n";
+            accountExists = true;
         }
     } else if (hasAccount == 'Y' || hasAccount == 'y') {
         accountExists = true;
     } else {
         std::cout << "Please enter a valid input (Y/N)!\n";
         std::cout << '\n';
+        continue;
     }
 
-    std::cout << "\nEnter your balance: ";
-    std::cin >> balance;
-
-    std::cout << "Account successfully created, please log in.\n";
-
-    accountExists = true;
 } while (accountExists == false);
 
 
@@ -150,11 +152,9 @@ do {
         std::cout << "Invalid account holder and PIN!\n";
         continue;
     }
-        
-        
-    
+         
     // Start of second loop
-    while(true) {
+    while(true){
 
     // Prompt
     std::cout << "What operation do you want to do?\n";
@@ -173,8 +173,12 @@ do {
         case 1:
             std::cout << "How much do you want to Withdraw?\n";
             std::cin >> withdraw;
-
-                if (balance >= withdraw) {
+                
+                if (withdraw <= 0 || std::cin.fail()) {
+                    std::cout << withdraw << " is an invalid amount!\n";
+                    std::cin.clear();
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                } else if (balance >= withdraw) {
                     balance -= withdraw;
 
                     std::cout << "Successfully Withdrawed " << withdraw << " Pesos!\n";
@@ -190,9 +194,14 @@ do {
             std::cin >> transact;
 
             // Transaction validation
-            if (transact <= 0) {
-                    std::cout << "Invalid input!\n";
-                    break;
+            if (std::cin.fail()) {
+                std::cout << "Invalid input!\n";
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                break;
+            }else if (transact <= 0) {
+                std::cout << "Invalid input!\n";
+                break;
             }
 
             std::cout << "Whom do you wanna send it to\n";
@@ -204,6 +213,9 @@ do {
             }
             else if (receiver == accountName) {
                 std::cout << "You cannot send money to yourself.\n";
+                break;
+            } else {
+                std::cout << "This user does not exist!\n";
                 break;
             }
 
@@ -223,7 +235,13 @@ do {
             std::cin >> exchange;
 
             // Verifies if balance is enough for exchange
-            if (exchange <= balance) {
+            if (std::cin.fail()) {
+                std::cout << "Invalid input!\n";
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            } else if (exchange <= 0) {
+                std::cout << exchange << " is an invalid amount!\n";
+            } else if (exchange <= balance) {
 
                 // Does balance operation and sets secondBalance
                 balance -= exchange;
@@ -242,9 +260,17 @@ do {
             std::cout << "How much do you want to Cash In?\n";
             std::cin >> cashin;
 
-            balance += cashin;
+            if (std::cin.fail()) {
+                std::cout << "Please enter a valid number\n";
+                std::cin.clear(); // Clear the error flags
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Discard bad input   
+            } else if (cashin < 1) {
+                std::cout << "You cannot add " << cashin << " to your account!\n";
+            } else {
+                balance += cashin;
 
-            std::cout << "Successfully cashed " << cashin << " to your account.";
+                std::cout << "Successfully cashed " << cashin << " to your account.";
+            }
             break;
         case 5:
             std::cout << "Session ended.\n";
@@ -256,8 +282,8 @@ do {
             else if (currency == "Pesos") {
                 std::cout << "You have " << balance << " Pesos\n";
             } 
-            else if (currency == "Dollar") {
-                std::cout << "You have " << balance << " Dollars\n";
+            else if (secondCurrency == "Dollar") {
+                std::cout << "You have " << secondBalance << " Dollars\n";
             }
             break;
         case 7:
