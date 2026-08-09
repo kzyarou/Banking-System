@@ -43,7 +43,7 @@ using namespace secondAccount;
 char hasAccount;
 char createAccount;
 
-bool accountExists;
+bool accountExists = false;
 
 // Password Randomizer
 srand(time(NULL));
@@ -84,10 +84,7 @@ do {
             } else {
                 std::cout << "Your PIN should be 4 digits!\n";
             }
-            std::cout << "\nEnter your balance: ";
-            std::cin >> balance;
-
-            std::cout << "Account successfully created, please log in.\n";
+            
         }
     } else if (hasAccount == 'Y' || hasAccount == 'y') {
         accountExists = true;
@@ -95,6 +92,13 @@ do {
         std::cout << "Please enter a valid input (Y/N)!\n";
         std::cout << '\n';
     }
+
+    std::cout << "\nEnter your balance: ";
+    std::cin >> balance;
+
+    std::cout << "Account successfully created, please log in.\n";
+
+    accountExists = true;
 } while (accountExists == false);
 
 
