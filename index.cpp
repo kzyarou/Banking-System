@@ -5,6 +5,10 @@
 #include <ctime>
 #include <limits>
 
+void withdraw (double withdraw);
+void transact (double transactAmount, std::string receiver);
+void exchange (double exchangeAmount);
+void cashin (double cashinAmount);
 
 typedef int pin_t;
 using operation_t = int;
@@ -111,10 +115,10 @@ do {
     pin_t pin1 = {};
     pin_t session = {};
 
-    do_t withdraw = {};
-    do_t transact = {};
-    do_t exchange = {};
-    do_t cashin = {};
+    do_t withdrawAmount = {};
+    do_t transactAmount = {};
+    do_t exchangeAmount = {};
+    do_t cashinAmount = {};
 
     text_t accountHolder;
     text_t receiver;
@@ -172,105 +176,27 @@ do {
 
         case 1:
             std::cout << "How much do you want to Withdraw?\n";
-            std::cin >> withdraw;
+            std::cin >> withdrawAmount;
                 
-                if (withdraw <= 0 || std::cin.fail()) {
-                    std::cout << withdraw << " is an invalid amount!\n";
-                    std::cin.clear();
-                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                } else if (balance >= withdraw) {
-                    balance -= withdraw;
-
-                    std::cout << "Successfully Withdrawed " << withdraw << " Pesos!\n";
-                    std::cout << "Your remaining balance is " << balance << " Pesos.\n";
-                    std::cout << "Going back...\n";
-                } else {
-                    std::cout << "Insufficient Balance, please try again.\n";
-                }
-
+            withdraw (withdrawAmount);
             break;
         case 2:
             std::cout << "How much do you want to Send?\n";
-            std::cin >> transact;
+            std::cin >> transactAmount;
 
-            // Transaction validation
-            if (std::cin.fail()) {
-                std::cout << "Invalid input!\n";
-                std::cin.clear();
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                break;
-            }else if (transact <= 0) {
-                std::cout << "Invalid input!\n";
-                break;
-            }
-
-            std::cout << "Whom do you wanna send it to\n";
-            std::cin >> receiver;
-
-            // Receiver validation
-            if (receiver == firstAccount::accountName) {
-                std::cout << "Sending...\n";
-            }
-            else if (receiver == accountName) {
-                std::cout << "You cannot send money to yourself.\n";
-                break;
-            } else {
-                std::cout << "This user does not exist!\n";
-                break;
-            }
-
-            // Checks if balance is enough & if receiver exists
-            if (balance >= transact && receiver == firstAccount::accountName) {
-                balance -= transact;
-                std::cout << "Transaction successful!\n";
-                std::cout << transact << " sent to " << receiver << '\n';
-                std::cout << "Your remaining balance is: " << balance << '\n';
-            } else if (balance < transact) {
-                std::cout << "Insufficient balance.\n";
-                break;
-            }  
+            transact (transactAmount, receiver);
             break;
         case 3:
             std::cout << "How much do you want to Exchange?\n";
-            std::cin >> exchange;
+            std::cin >> exchangeAmount;
 
-            // Verifies if balance is enough for exchange
-            if (std::cin.fail()) {
-                std::cout << "Invalid input!\n";
-                std::cin.clear();
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            } else if (exchange <= 0) {
-                std::cout << exchange << " is an invalid amount!\n";
-            } else if (exchange <= balance) {
-
-                // Does balance operation and sets secondBalance
-                balance -= exchange;
-                secondBalance = exchange * dollar;
-
-                // Success message
-                std::cout << "Successfully exchanged " << exchange << " to " << secondBalance << " Dollars!\n";
-                std::cout << "Your remaining balance is " << balance << " Pesos.\n";
-
-                secondCurrency = "Dollar";
-            } else {
-                std::cout << "You do not have enough balance.\n";
-            }
+            exchange (exchangeAmount);
             break;
         case 4:
             std::cout << "How much do you want to Cash In?\n";
-            std::cin >> cashin;
+            std::cin >> cashinAmount;
 
-            if (std::cin.fail()) {
-                std::cout << "Please enter a valid number\n";
-                std::cin.clear(); // Clear the error flags
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Discard bad input   
-            } else if (cashin < 1) {
-                std::cout << "You cannot add " << cashin << " to your account!\n";
-            } else {
-                balance += cashin;
-
-                std::cout << "Successfully cashed " << cashin << " to your account.";
-            }
+            cashin (cashinAmount);
             break;
         case 5:
             std::cout << "Session ended.\n";
@@ -304,4 +230,94 @@ do {
 
 } while(true);
 
+}
+
+
+void withdraw (double withdrawAmount) {
+    if (withdrawAmount <= 0 || std::cin.fail()) {
+        std::cout << withdrawAmount << " is an invalid amount!\n";
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    } else if (secondAccount::balance >= withdrawAmount) {
+        secondAccount::balance -= withdrawAmount;
+
+        std::cout << "Successfully Withdrawed " << withdrawAmount << " Pesos!\n";
+        std::cout << "Your remaining balance is " << secondAccount::balance << " Pesos.\n";
+        std::cout << "Going back...\n";
+    } else {
+        std::cout << "Insufficient Balance, please try again.\n";
+    }
+}
+
+void transact (int transactAmount, std::string receiver) {
+    // Transaction validation
+            if (std::cin.fail()) {
+                std::cout << "Invalid input!\n";
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            }else if (transactAmount <= 0) {
+                std::cout << "Invalid input!\n";
+            }
+
+            std::cout << "Whom do you wanna send it to\n";
+            std::cin >> receiver;
+
+            // Receiver validation
+            if (receiver == firstAccount::accountName) {
+                std::cout << "Sending...\n";
+            }
+            else if (receiver == firstAccount::accountName) {
+                std::cout << "You cannot send money to yourself.\n";
+            } else {
+                std::cout << "This user does not exist!\n";
+            }
+
+            // Checks if balance is enough & if receiver exists
+            if (secondAccount::balance >= transactAmount && receiver == firstAccount::accountName) {
+                secondAccount::balance -= transactAmount;
+                std::cout << "Transaction successful!\n";
+                std::cout << transactAmount << " sent to " << receiver << '\n';
+                std::cout << "Your remaining balance is: " << secondAccount::balance << '\n';
+            } else if (secondAccount::balance < transactAmount) {
+                std::cout << "Insufficient balance.\n";
+            }  
+}
+
+void exchange (double exchangeAmount) {
+    const double dollar = 0.164;
+    // Verifies if balance is enough for exchange
+    if (std::cin.fail()) {
+        std::cout << "Invalid input!\n";
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    } else if (exchangeAmount <= 0) {
+        std::cout << exchangeAmount << " is an invalid amount!\n";
+    } else if (exchangeAmount <= secondAccount::balance) {
+
+        // Does balance operation and sets secondBalance
+        secondAccount::balance -= exchangeAmount;
+        secondAccount::secondBalance = exchangeAmount * dollar;
+
+        // Success message
+        std::cout << "Successfully exchanged " << exchangeAmount << " to " << secondAccount::secondBalance << " Dollars!\n";
+        std::cout << "Your remaining balance is " << secondAccount::balance << " Pesos.\n";
+
+        std::string secondCurrency = "Dollar";
+    } else {
+        std::cout << "You do not have enough balance.\n";
+    }   
+}
+
+void cashin (double cashinAmount) {
+    if (std::cin.fail()) {
+        std::cout << "Please enter a valid number\n";
+        std::cin.clear(); // Clear the error flags
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Discard bad input   
+    } else if (cashinAmount < 1) {
+        std::cout << "You cannot add " << cashinAmount << " to your account!\n";
+    } else {
+        secondAccount::balance += cashinAmount;
+
+        std::cout << "Successfully cashed " << cashinAmount << " to your account.";
+    }
 }
